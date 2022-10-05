@@ -13,6 +13,8 @@ app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.static('public'))
 
 // Routes
+import userRoutes from "./routes/userRoutes.mjs"
 
+app.use('/users', userRoutes)
 
 app.listen (5000)
