@@ -1,6 +1,10 @@
 import User from "../models/User.mjs";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken"
+
+// helpers
 import createUserToken from "../helpers/create-user-token.mjs";
+import getToken from "../helpers/get-token.mjs";
 
 export default class UserController {
   static async register(req, res) {
@@ -98,5 +102,22 @@ export default class UserController {
     }
 
     await createUserToken(user, req, res);
+  }
+
+  static async checkUser(req, res) {
+    let currentUser;
+
+    if (req.headers.authorization) {
+      const token = getToken(req);
+      const decoded = jwt.verify(token, "nossosecret");
+
+      currentUser = await User.findById(decoded.id);
+
+      currentUser.password = undefined;
+    } else {
+      currentUser = null;
+    }
+
+    res.status(200).json(currentUser);
   }
 }
