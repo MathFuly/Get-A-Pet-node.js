@@ -148,6 +148,15 @@ export default class UserController {
 
     let image = "";
 
+    if (req.file) {
+      image = req.file.filename;
+    }
+
+    if (image) {
+      const imageName = req.file.filename;
+      user.image = imageName;
+    }
+
     //validations
     if (!name) {
       res.status(422).json({ message: "O nome é obrigatório" });
@@ -178,11 +187,6 @@ export default class UserController {
     }
 
     user.phone = phone;
-
-    if (!password) {
-      res.status(422).json({ message: "A senha é obrigatória" });
-      return;
-    }
 
     if (password != confirmpassword) {
       res.status(422).json({ message: "As senhas não conferem!" });
